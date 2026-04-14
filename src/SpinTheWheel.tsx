@@ -57,7 +57,8 @@ export default function SpinTheWheel({
   const MOBILE_BREAKPOINT = 600; // canvas-width threshold for mobile layout
   const LONG_LABEL_RADIUS_OFFSET = 0.60; // fraction of radius for multi-word labels
   const STANDARD_LABEL_RADIUS_OFFSET = 0.62; // fraction of radius for short labels
-  const CLICK_TEXT_SCALE_FACTOR = 0.55; // fraction of centerRadius used for CLICK font size
+  const CLICK_TEXT_SCALE_FACTOR_MOBILE = 0.55; // fraction of centerRadius used for CLICK font size
+  const CLICK_TEXT_SCALE_FACTOR_DESKTOP = 0.42; // fraction of centerRadius used for CLICK font size
 
   const drawWheel = () => {
     const canvas = canvasRef.current;
@@ -176,7 +177,8 @@ export default function SpinTheWheel({
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillStyle = '#FFFFFF';
-    const clickFontSize = Math.max(10, Math.round(centerRadius * CLICK_TEXT_SCALE_FACTOR));
+    const clickScaleFactor = isMobile ? CLICK_TEXT_SCALE_FACTOR_MOBILE : CLICK_TEXT_SCALE_FACTOR_DESKTOP;
+    const clickFontSize = Math.max(10, Math.round(centerRadius * clickScaleFactor));
     ctx.font = `bold ${clickFontSize}px monospace`;
     ctx.fillText('CLICK', centerX, centerY);
     ctx.restore();
@@ -284,7 +286,7 @@ export default function SpinTheWheel({
   void dimensions;
 
   return (
-    <div className={`w-full h-full min-h-[600px] ${theme === 'dark' ? 'bg-black' : 'bg-white'} relative overflow-hidden flex flex-col transition-colors duration-300`}>
+    <div className={`w-full min-h-screen min-h-[600px] ${theme === 'dark' ? 'bg-black' : 'bg-white'} relative overflow-x-hidden flex flex-col transition-colors duration-300`}>
       {/* Header */}
       <header className={`relative z-10 px-8 py-6 ${
         theme === 'dark'
