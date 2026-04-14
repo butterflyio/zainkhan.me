@@ -54,6 +54,11 @@ export default function SpinTheWheel({
     }
   ];
 
+  const MOBILE_BREAKPOINT = 600; // canvas-width threshold for mobile layout
+  const LONG_LABEL_RADIUS_OFFSET = 0.60; // fraction of radius for multi-word labels
+  const STANDARD_LABEL_RADIUS_OFFSET = 0.62; // fraction of radius for short labels
+  const CLICK_TEXT_SCALE_FACTOR = 0.55; // fraction of centerRadius used for CLICK font size
+
   const drawWheel = () => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -61,7 +66,7 @@ export default function SpinTheWheel({
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    const isMobile = canvas.width < 600;
+    const isMobile = canvas.width < MOBILE_BREAKPOINT;
     const centerX = canvas.width / 2;
     // Move the wheel down to avoid header overlap
     const centerY = canvas.height / 2 + 40;
@@ -101,10 +106,10 @@ export default function SpinTheWheel({
       // Use smaller font and closer positioning for longer labels
       if (segment.label === 'PromptRaise' || segment.label === 'BuzzzAgentic') {
         ctx.font = `bold ${isMobile ? 9 : 13}px monospace`;
-        ctx.fillText(segment.label, radius * 0.60, 5);
+        ctx.fillText(segment.label, radius * LONG_LABEL_RADIUS_OFFSET, 5);
       } else {
         ctx.font = `bold ${isMobile ? 11 : 16}px monospace`;
-        ctx.fillText(segment.label, radius * 0.62, 5);
+        ctx.fillText(segment.label, radius * STANDARD_LABEL_RADIUS_OFFSET, 5);
       }
 
       ctx.restore();
@@ -171,7 +176,7 @@ export default function SpinTheWheel({
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillStyle = '#FFFFFF';
-    const clickFontSize = Math.max(10, Math.round(centerRadius * 0.55));
+    const clickFontSize = Math.max(10, Math.round(centerRadius * CLICK_TEXT_SCALE_FACTOR));
     ctx.font = `bold ${clickFontSize}px monospace`;
     ctx.fillText('CLICK', centerX, centerY);
     ctx.restore();
