@@ -24,6 +24,7 @@ export default function SpinTheWheel({
 
   const [theme, setTheme] = useState<'dark' | 'light'>('dark');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [winningSegment, setWinningSegment] = useState<WheelSegment | null>(null);
 
   const segments: WheelSegment[] = [
     {
@@ -53,6 +54,11 @@ export default function SpinTheWheel({
     }
   ];
 
+  const MOBILE_BREAKPOINT = 600; // canvas-width threshold for mobile layout
+  const LONG_LABEL_RADIUS_OFFSET = 0.60; // fraction of radius for multi-word labels
+  const STANDARD_LABEL_RADIUS_OFFSET = 0.62; // fraction of radius for short labels
+  const CLICK_TEXT_SCALE_FACTOR = 0.55; // fraction of centerRadius used for CLICK font size
+
   const drawWheel = () => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -60,10 +66,11 @@ export default function SpinTheWheel({
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
+    const isMobile = canvas.width < MOBILE_BREAKPOINT;
     const centerX = canvas.width / 2;
     // Move the wheel down to avoid header overlap
     const centerY = canvas.height / 2 + 40;
-    const radius = Math.min(canvas.width, canvas.height) * 0.35;
+    const radius = Math.min(canvas.width, canvas.height) * (isMobile ? 0.28 : 0.35);
 
     // Clear canvas
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -98,11 +105,11 @@ export default function SpinTheWheel({
 
       // Use smaller font and closer positioning for longer labels
       if (segment.label === 'PromptRaise' || segment.label === 'BuzzzAgentic') {
-        ctx.font = 'bold 13px monospace';
-        ctx.fillText(segment.label, radius * 0.62, 5);
+        ctx.font = `bold ${isMobile ? 9 : 13}px monospace`;
+        ctx.fillText(segment.label, radius * LONG_LABEL_RADIUS_OFFSET, 5);
       } else {
-        ctx.font = 'bold 16px monospace';
-        ctx.fillText(segment.label, radius * 0.65, 5);
+        ctx.font = `bold ${isMobile ? 11 : 16}px monospace`;
+        ctx.fillText(segment.label, radius * STANDARD_LABEL_RADIUS_OFFSET, 5);
       }
 
       ctx.restore();
@@ -169,7 +176,8 @@ export default function SpinTheWheel({
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillStyle = '#FFFFFF';
-    ctx.font = 'bold 20px monospace';
+    const clickFontSize = Math.max(10, Math.round(centerRadius * CLICK_TEXT_SCALE_FACTOR));
+    ctx.font = `bold ${clickFontSize}px monospace`;
     ctx.fillText('CLICK', centerX, centerY);
     ctx.restore();
 
@@ -190,7 +198,7 @@ export default function SpinTheWheel({
 
     // Calculate and update text position (above the pointer with more spacing)
     const pointerTop = centerY - radius - 50; // Top of the pointer triangle
-    setPointerTopPosition(pointerTop - 50); // 50px above the pointer for more spacing
+    setPointerTopPosition(Math.max(10, pointerTop - 50)); // at least 10px from top
   };
 
   const spinWheel = () => {
@@ -228,10 +236,8 @@ export default function SpinTheWheel({
         const segmentAngle = 360 / segments.length;
         const selectedIndex = Math.floor(normalizedRotation / segmentAngle) % segments.length;
 
-        // Execute the action after a short delay
-        setTimeout(() => {
-          segments[selectedIndex].action();
-        }, 500);
+        // Show the winning segment overlay so the user can tap to open the link
+        setWinningSegment(segments[selectedIndex]);
       }
     };
 
@@ -569,7 +575,7 @@ export default function SpinTheWheel({
           style={{ top: `${pointerTopPosition}px` }}
         >
           <motion.div
-            className={`text-2xl font-mono font-bold whitespace-nowrap ${
+            className={`text-base md:text-2xl font-mono font-bold whitespace-nowrap ${
               theme === 'dark' ? 'text-white' : 'text-black'
             } transition-colors duration-300`}
             initial={{ opacity: 0, y: 10 }}
@@ -589,16 +595,55 @@ export default function SpinTheWheel({
             </motion.span>
           </motion.div>
         </div>
+
+        {/* Winning segment overlay – direct tap triggers window.open (works on mobile) */}
+        {winningSegment && (
+          <div
+            className="absolute inset-0 flex items-center justify-center z-20"
+            style={{ background: 'rgba(0,0,0,0.55)' }}
+          >
+            <div
+              className={`flex flex-col items-center gap-4 px-8 py-6 rounded-2xl border-2 ${
+                theme === 'dark'
+                  ? 'bg-black border-green-500/50 shadow-xl shadow-green-500/20'
+                  : 'bg-white border-gray-300 shadow-xl'
+              } max-w-xs w-full mx-4`}
+            >
+              <p className={`font-mono text-sm ${theme === 'dark' ? 'text-green-400/70' : 'text-gray-500'}`}>
+                You landed on
+              </p>
+              <p className={`font-mono text-xl font-bold ${theme === 'dark' ? 'text-white' : 'text-black'}`}>
+                {winningSegment.label}
+              </p>
+              <button
+                onClick={() => {
+                  winningSegment.action();
+                  setWinningSegment(null);
+                }}
+                className="w-full px-6 py-3 rounded-lg font-mono font-bold text-white text-sm"
+                style={{ backgroundColor: winningSegment.color }}
+              >
+                Visit {winningSegment.label} →
+              </button>
+              <button
+                onClick={() => setWinningSegment(null)}
+                className={`font-mono text-xs ${theme === 'dark' ? 'text-green-400/50 hover:text-green-400' : 'text-gray-400 hover:text-gray-600'} transition-colors`}
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Footer */}
-      <footer className={`relative z-10 px-8 py-8 ${
+      <footer className={`relative z-10 px-4 md:px-8 py-4 md:py-6 ${
         theme === 'dark'
           ? 'border-t border-green-500/20 bg-black'
           : 'border-t border-gray-300 bg-white'
       } backdrop-blur-sm transition-colors duration-300`}>
         <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8">
             {/* Brand */}
             <div className="md:col-span-1">
               <div className="flex items-center gap-2 mb-4">
@@ -708,7 +753,7 @@ export default function SpinTheWheel({
           </div>
 
           {/* Copyright */}
-          <div className={`mt-8 pt-6 border-t ${
+          <div className={`mt-4 md:mt-6 pt-3 md:pt-4 border-t ${
             theme === 'dark' ? 'border-green-500/20' : 'border-gray-300'
           } transition-colors duration-300`}>
             <p className={`text-xs font-mono text-center ${
