@@ -286,7 +286,7 @@ export default function SpinTheWheel({
   void dimensions;
 
   return (
-    <div className={`w-full min-h-[600px] min-h-screen ${theme === 'dark' ? 'bg-black' : 'bg-white'} relative overflow-x-hidden flex flex-col transition-colors duration-300`}>
+    <div className={`w-full min-h-screen ${theme === 'dark' ? 'bg-black' : 'bg-white'} relative overflow-x-hidden flex flex-col transition-colors duration-300`}>
       {/* Header */}
       <header className={`relative z-10 px-8 py-6 ${
         theme === 'dark'
