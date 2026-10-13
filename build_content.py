@@ -18,7 +18,7 @@ CONTENT = os.path.join(ROOT, "content.md")
 INDEX = os.path.join(ROOT, "index.html")
 IMG_DIR = os.path.join(ROOT, "images", "timeline")
 RTL = {"ar", "ur", "he", "fa", "yi"}
-CSSV = "12"
+CSSV = "13"
 FONTS = ("https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@700"
          "&family=Noto+Sans+Devanagari:wght@700&family=Noto+Nastaliq+Urdu:wght@700"
          "&family=Noto+Sans+JP:wght@700&family=Noto+Sans+SC:wght@700&family=Noto+Sans+Thai:wght@700&display=swap")
@@ -49,9 +49,8 @@ PAGE_TEMPLATE = """<!doctype html>
     <nav class="toplinks" id="site-menu" aria-label="Elsewhere">
 __TOPBAR__
     </nav>
-    <button type="button" class="avatar" id="logo" aria-label="Zain Khan, go home" title="Home">
-      <img class="mark" src="images/mark.svg" alt="">
-      <img class="photo" src="images/zain.jpg" alt="" width="400" height="400">
+    <button type="button" class="brandmark" id="logo" aria-label="Zain Khan, go home" title="Home">
+      <span class="wordmark">Zain<span class="dot">.</span></span>
       <span class="brand">Zain Khan</span>
     </button>
   </header>
@@ -179,9 +178,7 @@ def build_hero(d):
         '        <p class="hello" aria-hidden="true" id="hello">',
         "\n".join(spans),
         "        </p>",
-        '        <p class="nameintro">%s</p>' % esc(d["hero"].get("greeting-label", "")),
-        '        <h1 class="name">%s</h1>' % esc(d["hero"].get("name", "")),
-        '        <p class="sr-only">%s</p>' % esc(sr.strip()),
+        '        <h1 class="sr-only">%s</h1>' % esc(sr.strip()),
     ])
 
 
