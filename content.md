@@ -155,3 +155,16 @@ caption:
 ### 1990 | Born December 16 in Aligarh - first word "ZZXX"
 photo:
 caption:
+
+## Privacy
+last-updated: October 2026
+
+This is a personal website. There are no accounts, no sign-up forms, and no mailing list. It does not set cookies and it does not run advertising or analytics trackers.
+
+The only personal data involved is what you choose to send. If you email me through a link on this site, I receive your address and your message, and I use them only to reply.
+
+This site loads its typefaces from Google Fonts, which means Google receives your IP address when a page loads. Everything else is served from this domain.
+
+I do not sell or share anything about you, because there is nothing to sell or share.
+
+If you are in a region with data protection laws, you can ask me what I hold about you and ask me to delete it. Write to hello@zainkhan.me.

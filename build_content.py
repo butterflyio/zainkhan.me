@@ -18,6 +18,55 @@ CONTENT = os.path.join(ROOT, "content.md")
 INDEX = os.path.join(ROOT, "index.html")
 IMG_DIR = os.path.join(ROOT, "images", "timeline")
 RTL = {"ar", "ur", "he", "fa", "yi"}
+CSSV = "10"
+FONTS = ("https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@700"
+         "&family=Noto+Sans+Devanagari:wght@700&family=Noto+Nastaliq+Urdu:wght@700"
+         "&family=Noto+Sans+Gurmukhi:wght@700&family=Noto+Sans+JP:wght@700&display=swap")
+
+PRIVACY_TEMPLATE = """<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Privacy - Zain Khan</title>
+  <meta name="description" content="How this site handles privacy. Short and plain.">
+  <meta name="theme-color" content="#171411">
+  <meta name="color-scheme" content="dark">
+  <link rel="canonical" href="https://zainkhan.me/privacy.html">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" as="style" href="__FONTS__">
+  <link rel="stylesheet" href="__FONTS__" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="__FONTS__"></noscript>
+  <link rel="stylesheet" href="css/site.css?v=__CSSV__">
+</head>
+<body data-state="home">
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="topbar">
+    <button type="button" class="menu-btn" id="menuBtn" aria-expanded="false" aria-controls="site-menu">Menu</button>
+    <nav class="toplinks" id="site-menu" aria-label="Elsewhere">
+<!--TOPBAR-->
+    </nav>
+    <button type="button" class="avatar" id="logo" aria-label="Zain Khan, go home" title="Home">
+      <span class="monogram">ZK</span>
+      <img src="images/zain.jpg" alt="" width="400" height="400">
+      <span class="brand">Zain Khan</span>
+    </button>
+  </header>
+  <main id="main" class="legal">
+    <p class="signal-num">Privacy</p>
+    <h1>Privacy.</h1>
+    <div class="essay">
+<!--BODY-->
+    </div>
+    <p class="back"><a class="linklike" href="index.html">&larr; Home</a></p>
+  </main>
+  <footer>Zain Khan &middot; <a href="index.html">the build</a> &middot; <a href="cv.html">View my CV</a> &middot; <a href="privacy.html">Privacy</a></footer>
+  <script src="js/app.js?v=__CSSV__"></script>
+</body>
+</html>
+"""
 
 
 def esc(s):
@@ -26,7 +75,7 @@ def esc(s):
 
 def parse():
     lines = open(CONTENT, encoding="utf-8").read().splitlines()
-    data = {"meta": {}, "hero": {"greetings": []}, "topbar": [], "social": [], "sections": [], "timeline": []}
+    data = {"meta": {}, "hero": {"greetings": []}, "topbar": [], "social": [], "sections": [], "timeline": [], "privacy": []}
     cur = None
     in_greet = False
     sec = None
@@ -88,6 +137,11 @@ def parse():
                 ev["photo"] = line.split(":", 1)[1].strip()
             elif line.startswith("caption:"):
                 ev["caption"] = line.split(":", 1)[1].strip()
+        elif cur == "Privacy":
+            if line.lower().startswith("last-updated:"):
+                data["privacy_last"] = line.split(":", 1)[1].strip()
+            else:
+                data["privacy"].append(line)
     flush_sec(); flush_ev()
     return data
 
@@ -130,13 +184,16 @@ def build_hero(d):
     ])
 
 
-def build_topbar(d):
+def build_topbar(d, for_privacy=False):
     out = []
     for it in d["topbar"]:
-        if it["href"] == "timeline":
+        if it["href"] == "timeline" and not for_privacy:
             out.append('      <button type="button" class="linklike" data-view="timeline">%s</button>' % esc(it["label"]))
+        elif it["href"] == "timeline":
+            out.append('      <a href="index.html">%s</a>' % esc(it["label"]))
         else:
             out.append('      <a href="%s">%s</a>' % (esc(it["href"]), esc(it["label"])))
+    out.append('      <a href="privacy.html" class="only-mobile">Privacy</a>')
     return "\n".join(out)
 
 
@@ -193,6 +250,18 @@ def build_timeline(d):
     return "\n".join(out)
 
 
+def build_privacy(d):
+    topbar = build_topbar(d, for_privacy=True)
+    body = "\n".join('        <p>%s</p>' % esc(p) for p in d["privacy"])
+    last = d.get("privacy_last")
+    if last:
+        body += '\n        <p class="meta-note">Last updated: %s.</p>' % esc(last)
+    return (PRIVACY_TEMPLATE.replace("<!--TOPBAR-->", topbar)
+            .replace("<!--BODY-->", body)
+            .replace("__FONTS__", FONTS)
+            .replace("__CSSV__", CSSV))
+
+
 def replace_block(src, name, content):
     start = "<!-- %s:start -->" % name
     end = "<!-- %s:end -->" % name
@@ -226,8 +295,10 @@ def main():
     src = replace_block(src, "catalog", build_catalog(d, target))
     src = replace_block(src, "timeline", build_timeline(d))
     open(INDEX, "w", encoding="utf-8").write(src)
+    open(os.path.join(ROOT, "privacy.html"), "w", encoding="utf-8").write(build_privacy(d))
     photos = sum(1 for e in d["timeline"] if e.get("photo") and os.path.exists(os.path.join(IMG_DIR, e["photo"])))
-    print("built: %d sections, %d timeline events (%d with photos)" % (len(d["sections"]), len(d["timeline"]), photos))
+    print("built: %d sections, %d timeline events (%d with photos), privacy %d paras"
+          % (len(d["sections"]), len(d["timeline"]), photos, len(d["privacy"])))
 
 
 if __name__ == "__main__":

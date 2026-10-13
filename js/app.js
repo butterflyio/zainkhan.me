@@ -220,16 +220,41 @@
     })();
   }
 
+  /* ---- Mobile menu ---- */
+  var menuBtn = document.getElementById('menuBtn');
+  var siteMenu = document.getElementById('site-menu');
+  function closeMenu() {
+    if (!menuBtn) return;
+    document.body.classList.remove('menu-open');
+    menuBtn.setAttribute('aria-expanded', 'false');
+    menuBtn.textContent = 'Menu';
+  }
+  if (menuBtn && siteMenu) {
+    var openMenu = function () {
+      document.body.classList.add('menu-open');
+      menuBtn.setAttribute('aria-expanded', 'true');
+      menuBtn.textContent = 'Close';
+    };
+    menuBtn.addEventListener('click', function () {
+      if (document.body.classList.contains('menu-open')) closeMenu(); else openMenu();
+    });
+    siteMenu.addEventListener('click', function (e) {
+      if (e.target.closest && e.target.closest('a, button')) closeMenu();
+    });
+  }
+
   document.addEventListener('keydown', function (e) {
     if (e.metaKey || e.ctrlKey || e.altKey) return;
     var t = e.target;
     if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable)) return;
+    if (e.key === 'Escape' && document.body.classList.contains('menu-open')) { closeMenu(); return; }
     if (e.key === 'ArrowRight') {
       var nextId = star ? star.dataset.next : null;
       if (nextId === 'home') showView('home');
       else if (nextId) select(nextId, true);
     } else if (e.key === 'ArrowLeft' || e.key === 'Escape') {
-      if (document.getElementById('view-timeline').classList.contains('is-active')) showView('home');
+      var tl = document.getElementById('view-timeline');
+      if (tl && tl.classList.contains('is-active')) showView('home');
       else clear();
     }
   });
@@ -281,8 +306,8 @@
   }
 
   /* ---- Restore last position (session) ---- */
-  var savedState = load('zk:state');
+  var savedState = items.length ? load('zk:state') : null;
   if (savedState === 'timeline') { showView('timeline'); }
   else if (savedState && TITLES[savedState]) { select(savedState, false); }
-  else { applyTheme(); }
+  else if (items.length) { applyTheme(); }
 })();
