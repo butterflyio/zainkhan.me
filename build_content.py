@@ -22,7 +22,7 @@ IMG_DIR = os.path.join(ROOT, "images", "timeline")
 
 def buildid():
     h = hashlib.sha1()
-    for f in ("css/site.css", "js/app.js"):
+    for f in ("css/site.css", "js/app.js", "images/zain.jpg"):
         h.update(open(os.path.join(ROOT, f), "rb").read())
     return h.hexdigest()[:8]
 RTL = {"ar", "ur", "he", "fa", "yi"}
@@ -54,7 +54,7 @@ PAGE_TEMPLATE = """<!doctype html>
 __TOPBAR__
     </nav>
     <button type="button" class="brandmark" id="logo" aria-label="Zain Khan, go home" title="Home">
-      <img class="face" src="images/zain.jpg" alt="" width="400" height="400">
+      <img class="face" src="images/zain.jpg?v=__CSSV__" alt="" width="400" height="400">
       <span class="wordmark">Zain<span class="dot">.</span></span>
     </button>
   </header>
@@ -293,7 +293,7 @@ CV_TEMPLATE = """<!doctype html>
 __TOPBAR__
     </nav>
     <button type="button" class="brandmark" id="logo" aria-label="Zain Khan, go home" title="Home">
-      <img class="face" src="images/zain.jpg" alt="" width="400" height="400">
+      <img class="face" src="images/zain.jpg?v=__CSSV__" alt="" width="400" height="400">
       <span class="wordmark">Zain<span class="dot">.</span></span>
     </button>
   </header>
@@ -384,6 +384,7 @@ def main():
     src = replace_block(src, "footer", build_footer(d, False))
     src = re.sub(r'site\.css\?v=[^"]*', 'site.css?v=' + CSSV, src)
     src = re.sub(r'app\.js\?v=[^"]*', 'app.js?v=' + CSSV, src)
+    src = re.sub(r'(images/zain\.jpg)(\?v=[^"]*)?', r'\1?v=' + CSSV, src)
     open(INDEX, "w", encoding="utf-8").write(src)
     open(os.path.join(ROOT, "privacy.html"), "w", encoding="utf-8").write(build_privacy(d))
     open(os.path.join(ROOT, "404.html"), "w", encoding="utf-8").write(build_404(d))
