@@ -30,7 +30,7 @@ th: สวัสดี
 ## Topbar links
 Promptraise | https://promptraise.com
 BuzzzAgentic | https://buzzzagentic.com
-Weekend projects | timeline
+My timeline | timeline
 CV | cv.html
 
 ## Social links

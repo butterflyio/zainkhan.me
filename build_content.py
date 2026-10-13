@@ -251,6 +251,43 @@ def build_timeline(d):
     return "\n".join(out)
 
 
+
+CV_TEMPLATE = """<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CV - Zain Khan</title>
+  <meta name="description" content="Zain Khan, Brand and Growth Marketing Lead. Download the CV.">
+  <meta name="theme-color" content="#171411">
+  <meta name="color-scheme" content="dark">
+  <link rel="canonical" href="https://zainkhan.me/cv.html">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+  <link rel="stylesheet" href="fonts/fonts.css?v=1">
+  <link rel="stylesheet" href="css/site.css?v=__CSSV__">
+  <link rel="stylesheet" href="css/cv.css?v=__CSSV__">
+</head>
+<body data-state="home">
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="topbar">
+    <button type="button" class="menu-btn" id="menuBtn" aria-expanded="false" aria-controls="site-menu">Menu</button>
+    <nav class="toplinks" id="site-menu" aria-label="Elsewhere">
+__TOPBAR__
+    </nav>
+    <button type="button" class="brandmark" id="logo" aria-label="Zain Khan, go home" title="Home">
+      <span class="wordmark">Zain<span class="dot">.</span></span>
+    </button>
+  </header>
+  <main id="main" class="cv">
+__CVBODY__
+  </main>
+  <footer>Zain Khan &middot; <a href="index.html">the build</a> &middot; <a href="cv.html">CV</a> &middot; <a href="privacy.html">Privacy</a></footer>
+  <script src="js/app.js?v=__CSSV__"></script>
+</body>
+</html>
+"""
+
 def render_page(d, title, desc, canonical, kicker, heading, body, for_privacy=True):
     return (PAGE_TEMPLATE
             .replace("__TOPBAR__", build_topbar(d, for_privacy=for_privacy))
@@ -278,6 +315,14 @@ def build_404(d):
             '        <p>Head back to the start and pick an idea.</p>')
     return render_page(d, "Not found - Zain Khan", "Page not found.",
                        "https://zainkhan.me/404.html", "404", "Not found.", body)
+
+
+
+def build_cv(d, body):
+    return (CV_TEMPLATE
+            .replace("__TOPBAR__", build_topbar(d, for_privacy=True))
+            .replace("__CVBODY__", body)
+            .replace("__CSSV__", CSSV))
 
 
 def replace_block(src, name, content):
@@ -319,6 +364,8 @@ def main():
     open(INDEX, "w", encoding="utf-8").write(src)
     open(os.path.join(ROOT, "privacy.html"), "w", encoding="utf-8").write(build_privacy(d))
     open(os.path.join(ROOT, "404.html"), "w", encoding="utf-8").write(build_404(d))
+    cv_body = open(os.path.join(ROOT, "cv-body.html"), encoding="utf-8").read()
+    open(os.path.join(ROOT, "cv.html"), "w", encoding="utf-8").write(build_cv(d, cv_body))
     photos = sum(1 for e in d["timeline"] if e.get("photo") and os.path.exists(os.path.join(IMG_DIR, e["photo"])))
     print("built: %d sections, %d timeline events (%d with photos), privacy %d paras"
           % (len(d["sections"]), len(d["timeline"]), photos, len(d["privacy"])))

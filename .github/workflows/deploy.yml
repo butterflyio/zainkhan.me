@@ -25,7 +25,7 @@ jobs:
           mkdir -p _site
           rsync -a --delete \
             --exclude '.git' --exclude '.github' --exclude 'incoming' \
-            --exclude 'content.md' --exclude 'build_content.py' \
+            --exclude 'content.md' --exclude 'build_content.py' --exclude 'cv-body.html' --exclude 'make_cv_pdf.py' \
             --exclude 'optimize_photos.py' --exclude 'publish_herenow.sh' \
             --exclude '.gitignore' --exclude '*.log' \
             ./ _site/
