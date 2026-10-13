@@ -97,6 +97,7 @@ h1, h2, h3 { color: var(--fg); font-weight: 700; line-height: 1.15; letter-spaci
 .menu-btn { display: none; }
 .brand { display: none; }
 .only-mobile { display: none; }
+.cat-back { display: none; }
 
 main { max-width: none; margin: 0 auto; padding: 5.5rem var(--pad-x) 12rem; }
 
@@ -265,6 +266,7 @@ footer { max-width: none; margin: 0 auto; padding: 0 var(--pad-x) 5rem; font-siz
 /* ---------- Motion preferences ---------- */
 @media (prefers-reduced-motion: reduce) {
   body, #next, .hello .g, .cat-item { transition: none; }
+  #next { animation: none; }
   .view.is-active, .cat-body { animation: none; }
   .cat-item { opacity: .6; }
 }
@@ -309,4 +311,16 @@ footer { max-width: none; margin: 0 auto; padding: 0 var(--pad-x) 5rem; font-siz
   }
   .avatar .monogram, .avatar img { display: none; }
   .avatar .brand { display: inline; font-weight: 800; letter-spacing: -.02em; }
+
+  /* One idea at a time: when a section is open, hide the rest of the list */
+  body.cat-open .catalog li:not(.is-open) { display: none; }
+  body.cat-open .cat-back { display: inline-block; margin-bottom: 1.2rem; font-size: .9em; }
+
+  /* Fixed, beating star (no dragging on mobile) */
+  #next { animation: starBeat 1.7s ease-in-out infinite; cursor: pointer; }
+}
+
+@keyframes starBeat {
+  0%, 60%, 100% { transform: translate(0, 0) scale(1); }
+  80% { transform: translate(0, 0) scale(1.22); }
 }

@@ -54,12 +54,17 @@
   }
 
   function closeAll() {
-    items.forEach(function (li) { var d = li.querySelector('details'); if (d && d.open) d.open = false; });
+    items.forEach(function (li) {
+      li.classList.remove('is-open');
+      var d = li.querySelector('details');
+      if (d && d.open) d.open = false;
+    });
   }
 
   function clear(skipStore) {
     current = null;
     closeAll();
+    document.body.classList.remove('cat-open');
     document.body.dataset.state = 'home';
     applyTheme();
     setStar(null);
@@ -73,8 +78,10 @@
     items.forEach(function (x) {
       var d = x.querySelector('details');
       var on = x.dataset.id === id;
+      x.classList.toggle('is-open', on);
       if (d && d.open !== on) d.open = on;
     });
+    document.body.classList.add('cat-open');
     document.body.dataset.state = id;
     applyTheme();
     setStar(id);
@@ -124,6 +131,14 @@
     if (v) { e.preventDefault(); showView(v.getAttribute('data-view')); }
   });
 
+  var catBack = document.getElementById('catBack');
+  if (catBack) {
+    catBack.addEventListener('click', function () {
+      clear();
+      window.scrollTo({ top: 0, behavior: reduced ? 'auto' : 'smooth' });
+    });
+  }
+
   var logo = document.getElementById('logo');
   if (logo) {
     logo.addEventListener('click', function () {
@@ -155,11 +170,18 @@
     applyStar();
   }
 
+  var isMobile = !!(window.matchMedia && window.matchMedia('(max-width: 680px)').matches);
   if (star) {
-    try {
-      var savedPos = localStorage.getItem('zk:star');
-      if (savedPos) { var pp = savedPos.split(','); starTx = parseFloat(pp[0]) || 0; starTy = parseFloat(pp[1]) || 0; }
-    } catch (e) {}
+    if (isMobile) {
+      // Fixed on mobile, no dragging.
+      starTx = 0; starTy = 0;
+      try { localStorage.removeItem('zk:star'); } catch (e) {}
+    } else {
+      try {
+        var savedPos = localStorage.getItem('zk:star');
+        if (savedPos) { var pp = savedPos.split(','); starTx = parseFloat(pp[0]) || 0; starTy = parseFloat(pp[1]) || 0; }
+      } catch (e) {}
+    }
     applyStar();
     clampStar();
     // Place it instantly on load, no fly-in from the corner.
@@ -176,7 +198,7 @@
       select(nextId, true);
     });
 
-    (function () {
+    if (!isMobile) (function () {
       var sx = 0, sy = 0, dragging = false, baseL = 0, baseT = 0;
       function move(e) {
         if (!dragging) return;
@@ -218,6 +240,13 @@
       window.addEventListener('resize', clampStar);
       window.addEventListener('blur', function () { if (dragging) up(); });
     })();
+
+    // If the viewport becomes mobile, snap it back to the corner.
+    window.addEventListener('resize', function () {
+      if (window.matchMedia && window.matchMedia('(max-width: 680px)').matches) {
+        starTx = 0; starTy = 0; applyStar();
+      }
+    });
   }
 
   /* ---- Mobile menu ---- */
