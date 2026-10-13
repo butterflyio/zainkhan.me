@@ -18,7 +18,7 @@ CONTENT = os.path.join(ROOT, "content.md")
 INDEX = os.path.join(ROOT, "index.html")
 IMG_DIR = os.path.join(ROOT, "images", "timeline")
 RTL = {"ar", "ur", "he", "fa", "yi"}
-CSSV = "14"
+CSSV = "15"
 FONTS = ("https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@700"
          "&family=Noto+Sans+Devanagari:wght@700&family=Noto+Nastaliq+Urdu:wght@700"
          "&family=Noto+Sans+JP:wght@700&family=Noto+Sans+SC:wght@700&family=Noto+Sans+Thai:wght@700&display=swap")
@@ -47,7 +47,6 @@ __TOPBAR__
     </nav>
     <button type="button" class="brandmark" id="logo" aria-label="Zain Khan, go home" title="Home">
       <span class="wordmark">Zain<span class="dot">.</span></span>
-      <span class="brand">Zain Khan</span>
     </button>
   </header>
   <main id="main" class="legal">

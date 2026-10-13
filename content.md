@@ -14,7 +14,6 @@ description: Heya. My name is Zain Khan. This is my memoir, to push my personal 
 ## Hero
 greeting-label: My name is
 name: Zain.
-lead: This site is my memoir. Click through the ideas that drive me.
 countdown-target: 2030-12-16T00:00:00
 
 ### Greetings

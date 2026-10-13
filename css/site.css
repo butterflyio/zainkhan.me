@@ -127,7 +127,6 @@ main { max-width: none; margin: 0 auto; padding: 5.5rem var(--pad-x) 12rem; }
 .brandmark:hover { color: var(--accent); }
 .brandmark:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
 .brandmark .dot { color: var(--accent); }
-.brandmark .brand { display: none; }
 
 /* ---------- Views ---------- */
 .view { display: none; }
@@ -303,10 +302,7 @@ footer { max-width: none; margin: 0 auto; padding: 0 var(--pad-x) 5rem; font-siz
   .only-mobile { display: inline; }
   body.menu-open #next { display: none; }
 
-  /* The wordmark becomes the full name on mobile */
   .brandmark { position: relative; z-index: 61; }
-  .brandmark .wordmark { display: none; }
-  .brandmark .brand { display: inline; }
 
   /* One idea at a time: when a section is open, hide the rest of the list */
   body.cat-open .catalog li:not(.is-open) { display: none; }
