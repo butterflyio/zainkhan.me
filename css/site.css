@@ -150,10 +150,9 @@ main { max-width: none; margin: 0 auto; padding: 5.5rem var(--pad-x) 12rem; }
   grid-area: 1 / 1;
   opacity: 0; transform: translateY(8px);
   transition: opacity .5s ease, transform .5s ease;
-  font-family: "Noto Sans Arabic", "Noto Sans Devanagari", "Noto Nastaliq Urdu", "Noto Sans JP", "Noto Sans SC", "Noto Sans Thai", -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+  font-family: "Noto Sans", "Noto Sans Arabic", "Noto Sans Devanagari", "Noto Sans CJK", "Noto Sans Thai", -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
 }
 .hello .g.is-on { opacity: 1; transform: none; }
-.hello .g[dir="rtl"] { font-family: "Noto Sans Arabic", "Noto Nastaliq Urdu", -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; }
 
 .nameintro { font-size: .72em; letter-spacing: .3em; text-transform: uppercase; color: var(--fg-dim); font-weight: 700; }
 .name { font-size: clamp(3.6rem, 15vw, 11rem); line-height: .9; letter-spacing: -.05em; font-weight: 800; margin: .05rem 0 0; }

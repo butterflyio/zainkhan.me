@@ -18,7 +18,7 @@ CONTENT = os.path.join(ROOT, "content.md")
 INDEX = os.path.join(ROOT, "index.html")
 IMG_DIR = os.path.join(ROOT, "images", "timeline")
 RTL = {"ar", "ur", "he", "fa", "yi"}
-CSSV = "13"
+CSSV = "14"
 FONTS = ("https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@700"
          "&family=Noto+Sans+Devanagari:wght@700&family=Noto+Nastaliq+Urdu:wght@700"
          "&family=Noto+Sans+JP:wght@700&family=Noto+Sans+SC:wght@700&family=Noto+Sans+Thai:wght@700&display=swap")
@@ -35,11 +35,7 @@ PAGE_TEMPLATE = """<!doctype html>
   <link rel="canonical" href="__CANONICAL__">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="preload" as="style" href="__FONTS__">
-  <link rel="stylesheet" href="__FONTS__" media="print" onload="this.media='all'">
-  <noscript><link rel="stylesheet" href="__FONTS__"></noscript>
+  <link rel="stylesheet" href="fonts/fonts.css?v=1">
   <link rel="stylesheet" href="css/site.css?v=__CSSV__">
 </head>
 <body data-state="home">
