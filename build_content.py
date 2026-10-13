@@ -18,22 +18,23 @@ CONTENT = os.path.join(ROOT, "content.md")
 INDEX = os.path.join(ROOT, "index.html")
 IMG_DIR = os.path.join(ROOT, "images", "timeline")
 RTL = {"ar", "ur", "he", "fa", "yi"}
-CSSV = "11"
+CSSV = "12"
 FONTS = ("https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@700"
          "&family=Noto+Sans+Devanagari:wght@700&family=Noto+Nastaliq+Urdu:wght@700"
-         "&family=Noto+Sans+Gurmukhi:wght@700&family=Noto+Sans+JP:wght@700&display=swap")
+         "&family=Noto+Sans+JP:wght@700&family=Noto+Sans+SC:wght@700&family=Noto+Sans+Thai:wght@700&display=swap")
 
-PRIVACY_TEMPLATE = """<!doctype html>
+PAGE_TEMPLATE = """<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Privacy - Zain Khan</title>
-  <meta name="description" content="How this site handles privacy. Short and plain.">
+  <title>__TITLE__</title>
+  <meta name="description" content="__DESC__">
   <meta name="theme-color" content="#171411">
   <meta name="color-scheme" content="dark">
-  <link rel="canonical" href="https://zainkhan.me/privacy.html">
+  <link rel="canonical" href="__CANONICAL__">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preload" as="style" href="__FONTS__">
@@ -46,19 +47,19 @@ PRIVACY_TEMPLATE = """<!doctype html>
   <header class="topbar">
     <button type="button" class="menu-btn" id="menuBtn" aria-expanded="false" aria-controls="site-menu">Menu</button>
     <nav class="toplinks" id="site-menu" aria-label="Elsewhere">
-<!--TOPBAR-->
+__TOPBAR__
     </nav>
     <button type="button" class="avatar" id="logo" aria-label="Zain Khan, go home" title="Home">
-      <span class="monogram">ZK</span>
-      <img src="images/zain.jpg" alt="" width="400" height="400">
+      <img class="mark" src="images/mark.svg" alt="">
+      <img class="photo" src="images/zain.jpg" alt="" width="400" height="400">
       <span class="brand">Zain Khan</span>
     </button>
   </header>
   <main id="main" class="legal">
-    <p class="signal-num">Privacy</p>
-    <h1>Privacy.</h1>
+    <p class="signal-num">__KICKER__</p>
+    <h1>__HEADING__</h1>
     <div class="essay">
-<!--BODY-->
+__BODY__
     </div>
     <p class="back"><a class="linklike" href="index.html">&larr; Home</a></p>
   </main>
@@ -250,16 +251,33 @@ def build_timeline(d):
     return "\n".join(out)
 
 
+def render_page(d, title, desc, canonical, kicker, heading, body, for_privacy=True):
+    return (PAGE_TEMPLATE
+            .replace("__TOPBAR__", build_topbar(d, for_privacy=for_privacy))
+            .replace("__TITLE__", title)
+            .replace("__DESC__", desc)
+            .replace("__CANONICAL__", canonical)
+            .replace("__KICKER__", kicker)
+            .replace("__HEADING__", heading)
+            .replace("__BODY__", body)
+            .replace("__FONTS__", FONTS)
+            .replace("__CSSV__", CSSV))
+
+
 def build_privacy(d):
-    topbar = build_topbar(d, for_privacy=True)
     body = "\n".join('        <p>%s</p>' % esc(p) for p in d["privacy"])
     last = d.get("privacy_last")
     if last:
         body += '\n        <p class="meta-note">Last updated: %s.</p>' % esc(last)
-    return (PRIVACY_TEMPLATE.replace("<!--TOPBAR-->", topbar)
-            .replace("<!--BODY-->", body)
-            .replace("__FONTS__", FONTS)
-            .replace("__CSSV__", CSSV))
+    return render_page(d, "Privacy - Zain Khan", "How this site handles privacy. Short and plain.",
+                       "https://zainkhan.me/privacy.html", "Privacy", "Privacy.", body)
+
+
+def build_404(d):
+    body = ('        <p>That page does not exist. It may have moved, or it was never here.</p>\n'
+            '        <p>Head back to the start and pick an idea.</p>')
+    return render_page(d, "Not found - Zain Khan", "Page not found.",
+                       "https://zainkhan.me/404.html", "404", "Not found.", body)
 
 
 def replace_block(src, name, content):
@@ -296,6 +314,7 @@ def main():
     src = replace_block(src, "timeline", build_timeline(d))
     open(INDEX, "w", encoding="utf-8").write(src)
     open(os.path.join(ROOT, "privacy.html"), "w", encoding="utf-8").write(build_privacy(d))
+    open(os.path.join(ROOT, "404.html"), "w", encoding="utf-8").write(build_404(d))
     photos = sum(1 for e in d["timeline"] if e.get("photo") and os.path.exists(os.path.join(IMG_DIR, e["photo"])))
     print("built: %d sections, %d timeline events (%d with photos), privacy %d paras"
           % (len(d["sections"]), len(d["timeline"]), photos, len(d["privacy"])))

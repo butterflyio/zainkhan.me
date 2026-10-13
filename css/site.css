@@ -130,8 +130,9 @@ main { max-width: none; margin: 0 auto; padding: 5.5rem var(--pad-x) 12rem; }
 .avatar:hover { transform: scale(1.05); }
 .avatar:active { transform: scale(.93); }
 .avatar:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
-.avatar img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity .25s ease; }
-.avatar:hover img { opacity: 1; }
+.avatar .mark { width: 56%; height: 56%; display: block; }
+.avatar .photo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity .25s ease; }
+.avatar:hover .photo { opacity: 1; }
 
 /* ---------- Views ---------- */
 .view { display: none; }
@@ -150,7 +151,7 @@ main { max-width: none; margin: 0 auto; padding: 5.5rem var(--pad-x) 12rem; }
   grid-area: 1 / 1;
   opacity: 0; transform: translateY(8px);
   transition: opacity .5s ease, transform .5s ease;
-  font-family: "Noto Sans Arabic", "Noto Sans Devanagari", "Noto Nastaliq Urdu", "Noto Sans Gurmukhi", "Noto Sans JP", -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+  font-family: "Noto Sans Arabic", "Noto Sans Devanagari", "Noto Nastaliq Urdu", "Noto Sans JP", "Noto Sans SC", "Noto Sans Thai", -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
 }
 .hello .g.is-on { opacity: 1; transform: none; }
 .hello .g[dir="rtl"] { font-family: "Noto Sans Arabic", "Noto Nastaliq Urdu", -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; }
@@ -309,7 +310,7 @@ footer { max-width: none; margin: 0 auto; padding: 0 var(--pad-x) 5rem; font-siz
     width: auto; height: auto; border-radius: 0; background: none; box-shadow: none;
     color: var(--fg); padding: 0; font-size: 1.05rem; position: relative; z-index: 61;
   }
-  .avatar .monogram, .avatar img { display: none; }
+  .avatar .mark, .avatar .photo { display: none; }
   .avatar .brand { display: inline; font-weight: 800; letter-spacing: -.02em; }
 
   /* One idea at a time: when a section is open, hide the rest of the list */

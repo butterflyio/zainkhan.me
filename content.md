@@ -22,10 +22,11 @@ en: Heya.
 hi: नमस्ते।
 ur: سلام۔
 ar: مرحبًا.
-pa: ਸਤ ਸ੍ਰੀ ਅਕਾਲ।
-es: Hola.
 tr: Merhaba.
 ja: こんにちは。
+zh: 你好。
+ms: Hai.
+th: สวัสดี
 
 ## Topbar links
 Promptraise | https://promptraise.com
