@@ -1,0 +1,17 @@
+name = "go-zainkhan"
+main = "worker.js"
+compatibility_date = "2024-11-01"
+
+# Change this to your real Telegram link, for example https://t.me/yourhandle
+[vars]
+TELEGRAM_URL = "https://t.me/REPLACE_WITH_YOUR_TELEGRAM"
+
+# Click logs (query with the Analytics Engine SQL API)
+[[analytics_engine_datasets]]
+binding = "CLICKS"
+dataset = "go_redirect"
+
+# Route the subdomain to this Worker
+[[routes]]
+pattern = "go.zainkhan.me/*"
+zone_name = "zainkhan.me"

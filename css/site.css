@@ -181,12 +181,10 @@ main { max-width: none; margin: 0 auto; padding: 5.5rem var(--pad-x) 12rem; }
 .soc-youtube .ico { -webkit-mask-image: url(../images/youtube.svg); mask-image: url(../images/youtube.svg); }
 .soc-github { --brand: #ffffff; --brand-ink: #171411; }
 .soc-github .ico { -webkit-mask-image: url(../images/github.svg); mask-image: url(../images/github.svg); }
-.soc-medium { --brand: #ffffff; --brand-ink: #171411; }
-.soc-medium .ico { -webkit-mask-image: url(../images/medium.svg); mask-image: url(../images/medium.svg); }
+.soc-telegram { --brand: #26A5E4; --brand-ink: #fff; }
+.soc-telegram .ico { -webkit-mask-image: url(../images/telegram.svg); mask-image: url(../images/telegram.svg); }
 .soc-maildotru { --brand: #005FF9; --brand-ink: #fff; }
 .soc-maildotru .ico { -webkit-mask-image: url(../images/maildotru.svg); mask-image: url(../images/maildotru.svg); }
-.soc-googlescholar { --brand: #4285F4; --brand-ink: #fff; }
-.soc-googlescholar .ico { -webkit-mask-image: url(../images/googlescholar.svg); mask-image: url(../images/googlescholar.svg); }
 @media (hover: none) { .soc { opacity: .85; } }
 
 .lead { font-size: 1.05em; opacity: .85; margin-bottom: 2.6rem; max-width: 42ch; }
