@@ -28,6 +28,13 @@
   var ORDER = items.map(function (li) { return li.dataset.id; });
   var current = null;
 
+  /* ---- Chapter deep links: #00 .. #07 ---- */
+  function hashFor(id) { return '#' + id.replace(/^s/, ''); }
+  function idFromHash() {
+    var h = (location.hash || '').replace(/^#/, '');
+    return /^\d{2}$/.test(h) ? ('s' + h) : null;
+  }
+
   /* ---- Timeline walking ---- */
   var timelineItems = Array.prototype.slice.call(document.querySelectorAll('#view-timeline .ev'));
   var tlIndex = -1;
@@ -102,6 +109,7 @@
     applyTheme();
     setStar(null);
     if (!skipStore) store('zk:state', 'home');
+    if (location.hash) location.hash = '';
   }
 
   function select(id, scroll) {
@@ -119,6 +127,7 @@
     applyTheme();
     setStar(id);
     store('zk:state', id);
+    if (location.hash !== hashFor(id)) location.hash = hashFor(id);
     if (scroll) li.scrollIntoView({ block: 'center', behavior: reduced ? 'auto' : 'smooth' });
   }
 
@@ -152,6 +161,7 @@
         tlIndex = -1;
         setStarTimeline();
         store('zk:state', 'timeline');
+        if (location.hash && history.replaceState) history.replaceState(null, '', location.pathname + location.search);
       } else {
         tlIndex = -1;
         clear();
@@ -164,6 +174,13 @@
     if (!e.target.closest) return;
     var v = e.target.closest('[data-view]');
     if (v) { e.preventDefault(); showView(v.getAttribute('data-view')); }
+  });
+
+  /* Keep the URL in sync with the open chapter (back/forward, shareable links). */
+  window.addEventListener('hashchange', function () {
+    var id = idFromHash();
+    if (id) { if (current !== id) select(id, false); }
+    else if (document.body.dataset.state === 'home' && current !== null) { clear(); }
   });
 
   var catBack = document.getElementById('catBack');
@@ -366,8 +383,10 @@
   }
 
   /* ---- Restore last position (session) ---- */
+  var hashId = items.length ? idFromHash() : null;
   var savedState = items.length ? load('zk:state') : null;
-  if (savedState === 'timeline') { showView('timeline'); }
+  if (hashId) { select(hashId, false); }
+  else if (savedState === 'timeline') { showView('timeline'); }
   else if (savedState && TITLES[savedState]) { select(savedState, false); }
   else if (items.length) { applyTheme(); }
 })();
