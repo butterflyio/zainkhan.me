@@ -156,11 +156,38 @@ main { max-width: none; margin: 0 auto; padding: 5.5rem var(--pad-x) 12rem; }
 .nameintro { font-size: .72em; letter-spacing: .3em; text-transform: uppercase; color: var(--fg-dim); font-weight: 700; }
 .name { font-size: clamp(3.6rem, 15vw, 11rem); line-height: .9; letter-spacing: -.05em; font-weight: 800; margin: .05rem 0 0; }
 
-/* ---------- Social ---------- */
-.social { display: flex; gap: .7rem; align-items: center; margin: 2rem 0 2.4rem; }
-.social a { display: inline-flex; line-height: 0; opacity: .6; transition: opacity var(--transition), transform var(--transition); }
-.social a:hover { opacity: 1; transform: translateY(-2px); }
-.social img { width: .85rem; height: .85rem; display: block; }
+/* ---------- Social: brand-colored hover chips ---------- */
+.social { display: flex; flex-wrap: wrap; align-items: center; gap: .15rem; margin: 1.6rem 0 2.2rem -.55rem; }
+.soc {
+  --brand: var(--fg); --brand-ink: rgb(var(--rgb-theme));
+  display: inline-grid; place-items: center; width: 2.3rem; height: 2.3rem;
+  border-radius: 50%; color: var(--fg); opacity: .6; text-decoration: none;
+  transition: opacity .16s ease, transform .16s ease, background-color .16s ease;
+}
+.soc:hover, .soc:focus-visible { opacity: 1; transform: translateY(-3px); background-color: var(--brand); outline: none; }
+.ico {
+  width: 1.05rem; height: 1.05rem; display: block; background-color: currentColor;
+  -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
+  -webkit-mask-position: center; mask-position: center;
+  -webkit-mask-size: contain; mask-size: contain;
+  transition: background-color .16s ease;
+}
+.soc:hover .ico, .soc:focus-visible .ico { background-color: var(--brand-ink); }
+.soc-linkedin { --brand: #0A66C2; --brand-ink: #fff; }
+.soc-linkedin .ico { -webkit-mask-image: url(../images/linkedin.svg); mask-image: url(../images/linkedin.svg); }
+.soc-x { --brand: #ffffff; --brand-ink: #171411; }
+.soc-x .ico { -webkit-mask-image: url(../images/x.svg); mask-image: url(../images/x.svg); }
+.soc-youtube { --brand: #FF0000; --brand-ink: #fff; }
+.soc-youtube .ico { -webkit-mask-image: url(../images/youtube.svg); mask-image: url(../images/youtube.svg); }
+.soc-github { --brand: #ffffff; --brand-ink: #171411; }
+.soc-github .ico { -webkit-mask-image: url(../images/github.svg); mask-image: url(../images/github.svg); }
+.soc-medium { --brand: #ffffff; --brand-ink: #171411; }
+.soc-medium .ico { -webkit-mask-image: url(../images/medium.svg); mask-image: url(../images/medium.svg); }
+.soc-maildotru { --brand: #005FF9; --brand-ink: #fff; }
+.soc-maildotru .ico { -webkit-mask-image: url(../images/maildotru.svg); mask-image: url(../images/maildotru.svg); }
+.soc-googlescholar { --brand: #4285F4; --brand-ink: #fff; }
+.soc-googlescholar .ico { -webkit-mask-image: url(../images/googlescholar.svg); mask-image: url(../images/googlescholar.svg); }
+@media (hover: none) { .soc { opacity: .85; } }
 
 .lead { font-size: 1.05em; opacity: .85; margin-bottom: 2.6rem; max-width: 42ch; }
 

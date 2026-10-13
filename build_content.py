@@ -202,8 +202,8 @@ def build_social(d):
     out = []
     for it in d["social"]:
         url = it["url"] or "#top"
-        out.append('        <a href="%s" aria-label="%s"><img src="images/%s.svg" alt="" width="24" height="24"></a>'
-                   % (esc(url), esc(it["label"]), esc(it["icon"])))
+        out.append('        <a class="soc soc-%s" href="%s" aria-label="%s"><span class="ico"></span></a>'
+                   % (esc(it["icon"]), esc(url), esc(it["label"])))
     return "\n".join(out)
 
 
