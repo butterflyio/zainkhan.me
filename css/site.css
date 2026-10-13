@@ -48,6 +48,8 @@ body {
   letter-spacing: -.01em;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  display: flex;
+  flex-direction: column;
   min-height: 100vh;
   min-height: 100dvh;
   overflow-x: hidden;
@@ -99,7 +101,7 @@ h1, h2, h3 { color: var(--fg); font-weight: 700; line-height: 1.15; letter-spaci
 .only-mobile { display: none; }
 .cat-back { display: none; }
 
-main { max-width: none; margin: 0 auto; padding: 5.5rem var(--pad-x) 12rem; }
+main { flex: 1 0 auto; max-width: none; margin: 0; padding: 4.5rem var(--pad-x) 1.2rem; }
 
 /* ---------- Fixed top bar with gradient ---------- */
 .topbar {
@@ -134,16 +136,16 @@ main { max-width: none; margin: 0 auto; padding: 5.5rem var(--pad-x) 12rem; }
 @keyframes viewIn { from { opacity: 0; } to { opacity: 1; } }
 
 /* ---------- Hero ---------- */
-.hero { margin-bottom: 2.5rem; }
+.hero { margin-bottom: 1.2rem; }
 .hello {
   display: grid;
-  font-size: clamp(2.8rem, 1rem + 11vw, 10rem);
+  font-size: clamp(2.4rem, min(13vw, 8.5dvh), 8rem);
   line-height: .95;
   font-weight: 800;
   letter-spacing: -.04em;
   color: var(--accent);
   min-height: 1.02em;
-  margin-bottom: 1.6rem;
+  margin-bottom: 1rem;
 }
 .hello .g {
   grid-area: 1 / 1;
@@ -157,7 +159,7 @@ main { max-width: none; margin: 0 auto; padding: 5.5rem var(--pad-x) 12rem; }
 .name { font-size: clamp(3.6rem, 15vw, 11rem); line-height: .9; letter-spacing: -.05em; font-weight: 800; margin: .05rem 0 0; }
 
 /* ---------- Social: brand-colored hover chips ---------- */
-.social { display: flex; flex-wrap: wrap; align-items: center; gap: .15rem; margin: 1.6rem 0 2.2rem -.55rem; }
+.social { display: flex; flex-wrap: wrap; align-items: center; gap: .15rem; margin: 1rem 0 1.4rem -.55rem; }
 .soc {
   --brand: var(--fg); --brand-ink: rgb(var(--rgb-theme));
   display: inline-grid; place-items: center; width: 2.3rem; height: 2.3rem;
@@ -293,9 +295,10 @@ main { max-width: none; margin: 0 auto; padding: 5.5rem var(--pad-x) 12rem; }
 
 /* ---------- Footer: mirrors the header ---------- */
 .site-footer {
-  display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline;
-  gap: 1rem 2rem; max-width: none; margin: 4rem auto 0;
-  padding: 2.4rem var(--pad-x) 3rem; border-top: 1px solid var(--line);
+  flex: 0 0 auto;
+  display: flex; flex-wrap: wrap; justify-content: flex-start; align-items: baseline;
+  gap: 1rem 2rem; max-width: none; margin: 0;
+  padding: 1.6rem var(--pad-x) 1.8rem; border-top: 1px solid var(--line);
 }
 .footer-links { display: flex; flex-wrap: wrap; gap: 1.4rem; align-items: center; }
 .footer-links a, .footer-links .linklike {
@@ -307,7 +310,7 @@ main { max-width: none; margin: 0 auto; padding: 5.5rem var(--pad-x) 12rem; }
 .footer-brand .dot { color: var(--accent); }
 
 @media (max-width: 680px) {
-  .site-footer { flex-direction: column; align-items: flex-start; gap: 1.2rem; }
+  .site-footer { padding-right: 4.2rem; }
 }
 
 /* ---------- Timeline photo captions ---------- */

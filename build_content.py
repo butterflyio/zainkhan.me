@@ -211,8 +211,7 @@ def build_footer(d, for_inner=False):
             items.append('<a href="%s">%s</a>' % (esc(it["href"]), esc(it["label"])))
     items.append('<a href="privacy.html">Privacy</a>')
     links = "\n        ".join(items)
-    return ('      <nav class="footer-links" aria-label="Footer">\n        ' + links + '\n      </nav>\n'
-            '      <span class="footer-brand">Zain<span class="dot">.</span></span>')
+    return ('      <nav class="footer-links" aria-label="Footer">\n        ' + links + '\n      </nav>')
 
 
 def build_social(d):

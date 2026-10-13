@@ -36,7 +36,7 @@ CV | cv.html
 ## Social links
 LinkedIn | https://www.linkedin.com/in/01z/ | linkedin
 X | https://x.com/zzaaiinnzen | x
-Telegram | https://go.zainkhan.me | telegram
+Telegram | https://t.me/agenticUAE | telegram
 GitHub | https://github.com/butterflyio | github
 YouTube | | youtube
 NewsLetter | mailto:hello@zainkhan.me | maildotru
