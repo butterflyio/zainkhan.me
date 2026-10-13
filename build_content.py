@@ -65,7 +65,9 @@ __BODY__
     </div>
     <p class="back"><a class="linklike" href="index.html">&larr; Home</a></p>
   </main>
-  <footer>Zain Khan &middot; <a href="index.html">the build</a> &middot; <a href="cv.html">View my CV</a> &middot; <a href="privacy.html">Privacy</a></footer>
+  <footer class="site-footer">
+__FOOTER__
+  </footer>
   <script src="js/app.js?v=__CSSV__"></script>
 </body>
 </html>
@@ -198,6 +200,21 @@ def build_topbar(d, for_privacy=False):
     return "\n".join(out)
 
 
+def build_footer(d, for_inner=False):
+    items = []
+    for it in d["topbar"]:
+        if it["href"] == "timeline" and not for_inner:
+            items.append('<button type="button" class="linklike" data-view="timeline">%s</button>' % esc(it["label"]))
+        elif it["href"] == "timeline":
+            items.append('<a href="index.html">%s</a>' % esc(it["label"]))
+        else:
+            items.append('<a href="%s">%s</a>' % (esc(it["href"]), esc(it["label"])))
+    items.append('<a href="privacy.html">Privacy</a>')
+    links = "\n        ".join(items)
+    return ('      <nav class="footer-links" aria-label="Footer">\n        ' + links + '\n      </nav>\n'
+            '      <span class="footer-brand">Zain<span class="dot">.</span></span>')
+
+
 def build_social(d):
     out = []
     for it in d["social"]:
@@ -282,7 +299,9 @@ __TOPBAR__
   <main id="main" class="cv">
 __CVBODY__
   </main>
-  <footer>Zain Khan &middot; <a href="index.html">the build</a> &middot; <a href="cv.html">CV</a> &middot; <a href="privacy.html">Privacy</a></footer>
+  <footer class="site-footer">
+__FOOTER__
+  </footer>
   <script src="js/app.js?v=__CSSV__"></script>
 </body>
 </html>
@@ -297,6 +316,7 @@ def render_page(d, title, desc, canonical, kicker, heading, body, for_privacy=Tr
             .replace("__KICKER__", kicker)
             .replace("__HEADING__", heading)
             .replace("__BODY__", body)
+            .replace("__FOOTER__", build_footer(d, True))
             .replace("__FONTS__", FONTS)
             .replace("__CSSV__", CSSV))
 
@@ -322,6 +342,7 @@ def build_cv(d, body):
     return (CV_TEMPLATE
             .replace("__TOPBAR__", build_topbar(d, for_privacy=True))
             .replace("__CVBODY__", body)
+            .replace("__FOOTER__", build_footer(d, True))
             .replace("__CSSV__", CSSV))
 
 
@@ -359,6 +380,7 @@ def main():
     src = replace_block(src, "social", build_social(d))
     src = replace_block(src, "catalog", build_catalog(d, target))
     src = replace_block(src, "timeline", build_timeline(d))
+    src = replace_block(src, "footer", build_footer(d, False))
     src = re.sub(r'site\.css\?v=[^"]*', 'site.css?v=' + CSSV, src)
     src = re.sub(r'app\.js\?v=[^"]*', 'app.js?v=' + CSSV, src)
     open(INDEX, "w", encoding="utf-8").write(src)

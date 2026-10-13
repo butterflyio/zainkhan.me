@@ -28,6 +28,39 @@
   var ORDER = items.map(function (li) { return li.dataset.id; });
   var current = null;
 
+  /* ---- Timeline walking ---- */
+  var timelineItems = Array.prototype.slice.call(document.querySelectorAll('#view-timeline .ev'));
+  var tlIndex = -1;
+
+  function inTimeline() { return document.body.dataset.state === 'timeline'; }
+
+  function setStarTimeline() {
+    if (!star) return;
+    var n = tlIndex + 1;
+    if (n < timelineItems.length) {
+      var yr = timelineItems[n].querySelector('.year');
+      star.dataset.next = 'timeline';
+      star.setAttribute('aria-label', 'Next: ' + (yr ? yr.textContent.trim() : 'timeline'));
+    } else {
+      star.dataset.next = 'home';
+      star.setAttribute('aria-label', 'Back to start');
+    }
+  }
+
+  function advanceTimeline() {
+    tlIndex++;
+    if (tlIndex >= timelineItems.length) { tlIndex = -1; showView('home'); return; }
+    timelineItems[tlIndex].scrollIntoView({ block: 'center', behavior: reduced ? 'auto' : 'smooth' });
+    setStarTimeline();
+  }
+
+  function starNext() {
+    if (inTimeline()) { advanceTimeline(); return; }
+    var nextId = star ? star.dataset.next : null;
+    if (nextId === 'home') { showView('home'); return; }
+    if (nextId) select(nextId, true);
+  }
+
   /* ---- Palette: random on first load, shuffled by the logo ---- */
   var PALETTE = ['23,20,17', '92,64,32', '184,60,16', '15,118,110', '21,122,58', '67,56,202', '159,18,57', '190,18,60', '109,40,217', '51,65,85'];
   var STATE_INDEX = { home: 0, s00: 1, s01: 2, s02: 3, s03: 4, s04: 5, s05: 6, s06: 7, s07: 8, timeline: 9 };
@@ -116,9 +149,11 @@
       if (name === 'timeline') {
         document.body.dataset.state = 'timeline';
         applyTheme();
-        setStar('timeline');
+        tlIndex = -1;
+        setStarTimeline();
         store('zk:state', 'timeline');
       } else {
+        tlIndex = -1;
         clear();
       }
     });
@@ -193,9 +228,7 @@
 
     star.addEventListener('click', function () {
       if (dragMoved) { dragMoved = false; return; }
-      var nextId = star.dataset.next;
-      if (nextId === 'home') { showView('home'); return; }
-      select(nextId, true);
+      starNext();
     });
 
     if (!isMobile) (function () {
@@ -278,9 +311,7 @@
     if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable)) return;
     if (e.key === 'Escape' && document.body.classList.contains('menu-open')) { closeMenu(); return; }
     if (e.key === 'ArrowRight') {
-      var nextId = star ? star.dataset.next : null;
-      if (nextId === 'home') showView('home');
-      else if (nextId) select(nextId, true);
+      starNext();
     } else if (e.key === 'ArrowLeft' || e.key === 'Escape') {
       var tl = document.getElementById('view-timeline');
       if (tl && tl.classList.contains('is-active')) showView('home');
