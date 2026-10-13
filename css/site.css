@@ -128,8 +128,13 @@ main { flex: 1 0 auto; max-width: none; margin: 0; padding: 4.5rem var(--pad-x) 
   transition: color .15s ease;
 }
 .brandmark .face {
-  width: 2rem; height: 2rem; border-radius: 50%; object-fit: cover; display: block;
+  width: 0; height: 2rem; border-radius: 50%; object-fit: cover; display: block;
+  flex: 0 0 auto; opacity: 0; margin-right: 0; overflow: hidden;
   box-shadow: 0 2px 8px rgba(0,0,0,.35);
+  transition: width .22s ease, opacity .22s ease, margin-right .22s ease;
+}
+.brandmark:hover .face, .brandmark:focus-visible .face {
+  width: 2rem; opacity: 1; margin-right: .55rem;
 }
 .brandmark:hover { color: var(--accent); }
 .brandmark:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
