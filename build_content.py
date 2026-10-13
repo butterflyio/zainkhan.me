@@ -54,6 +54,7 @@ PAGE_TEMPLATE = """<!doctype html>
 __TOPBAR__
     </nav>
     <button type="button" class="brandmark" id="logo" aria-label="Zain Khan, go home" title="Home">
+      <img class="face" src="images/zain.jpg" alt="" width="400" height="400">
       <span class="wordmark">Zain<span class="dot">.</span></span>
     </button>
   </header>
@@ -292,6 +293,7 @@ CV_TEMPLATE = """<!doctype html>
 __TOPBAR__
     </nav>
     <button type="button" class="brandmark" id="logo" aria-label="Zain Khan, go home" title="Home">
+      <img class="face" src="images/zain.jpg" alt="" width="400" height="400">
       <span class="wordmark">Zain<span class="dot">.</span></span>
     </button>
   </header>

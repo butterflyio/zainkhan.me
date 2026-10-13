@@ -124,7 +124,12 @@ main { flex: 1 0 auto; max-width: none; margin: 0; padding: 4.5rem var(--pad-x) 
   appearance: none; background: none; border: 0; padding: 0; cursor: pointer;
   color: var(--fg); font: inherit; font-weight: 800; font-size: 1.05rem;
   letter-spacing: -.02em; pointer-events: auto;
+  display: inline-flex; align-items: center; gap: .55rem;
   transition: color .15s ease;
+}
+.brandmark .face {
+  width: 2rem; height: 2rem; border-radius: 50%; object-fit: cover; display: block;
+  box-shadow: 0 2px 8px rgba(0,0,0,.35);
 }
 .brandmark:hover { color: var(--accent); }
 .brandmark:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
