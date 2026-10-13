@@ -8,6 +8,7 @@ Markers in index.html:  <!-- hero:start --> ... etc.
 This regenerates the meta tags, hero, topbar links, social links, the catalog
 sections, and the timeline. Everything else in index.html is left alone.
 """
+import hashlib
 import html
 import os
 import re
@@ -17,6 +18,13 @@ ROOT = os.path.dirname(os.path.abspath(__file__))
 CONTENT = os.path.join(ROOT, "content.md")
 INDEX = os.path.join(ROOT, "index.html")
 IMG_DIR = os.path.join(ROOT, "images", "timeline")
+
+
+def buildid():
+    h = hashlib.sha1()
+    for f in ("css/site.css", "js/app.js"):
+        h.update(open(os.path.join(ROOT, f), "rb").read())
+    return h.hexdigest()[:8]
 RTL = {"ar", "ur", "he", "fa", "yi"}
 CSSV = "15"
 FONTS = ("https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@700"
@@ -295,6 +303,8 @@ def replace_meta(src, d):
 
 
 def main():
+    global CSSV
+    CSSV = buildid()
     d = parse()
     target = d["hero"].get("countdown-target", "2030-12-16T00:00:00")
     src = open(INDEX, encoding="utf-8").read()
@@ -304,6 +314,8 @@ def main():
     src = replace_block(src, "social", build_social(d))
     src = replace_block(src, "catalog", build_catalog(d, target))
     src = replace_block(src, "timeline", build_timeline(d))
+    src = re.sub(r'site\.css\?v=[^"]*', 'site.css?v=' + CSSV, src)
+    src = re.sub(r'app\.js\?v=[^"]*', 'app.js?v=' + CSSV, src)
     open(INDEX, "w", encoding="utf-8").write(src)
     open(os.path.join(ROOT, "privacy.html"), "w", encoding="utf-8").write(build_privacy(d))
     open(os.path.join(ROOT, "404.html"), "w", encoding="utf-8").write(build_404(d))
